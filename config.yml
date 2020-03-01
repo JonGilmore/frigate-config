@@ -1,0 +1,83 @@
+web_port: 5000
+
+mqtt:
+  host: 192.168.45.249
+  topic_prefix: frigate
+  user: frigate
+  password: "{FRIGATE_MQTT_PASSWORD}"
+cameras:
+  deck:
+    fps: 6
+    ffmpeg:
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.230:554/Streaming/Channels/1/
+    mask: deck1.bmp
+    objects:
+      track:
+        - person
+      filters:
+        person:
+          min_area: 40000
+          max_area: 120000
+          threshold: 0.90
+  doorbell:
+    fps: 5
+    ffmpeg:
+      input: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.234:554/mpeg/media.amp
+    objects:
+      track:
+        - person
+      filters:
+        person:
+          min_area: 15000
+          max_area: 200000
+          threshold: 0.75
+  driveway:
+    fps: 4
+    ffmpeg:
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.233:554/Streaming/Channels/1/
+    objects:
+      track:
+        - person
+      filters:
+        person:
+          min_area: 10000
+          max_area: 100000
+          threshold: 0.75
+  garage:
+    fps: 6
+    ffmpeg:
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.237:554/Streaming/Channels/1/
+    objects:
+      track:
+        - person
+      filters:
+        person:
+          min_area: 10000
+          max_area: 100000
+          threshold: 0.75
+  deck_stairs:
+    fps: 6
+    ffmpeg:
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.238:554/Streaming/Channels/1/
+    objects:
+      track:
+        - person
+      filters:
+        person:
+          min_area: 10000
+          max_area: 100000
+          threshold: 0.90
+  kitchen:
+    fps: 20
+    take_frame: 4
+    ffmpeg:
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.83:554/live
+    objects:
+      track:
+        - person
+      filters:
+        person:
+          min_area: 40000
+          max_area: 100000
+          threshold: 0.90
+
