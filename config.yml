@@ -5,6 +5,14 @@ mqtt:
   topic_prefix: frigate
   user: frigate
   password: "{FRIGATE_MQTT_PASSWORD}"
+ffmpeg:
+  hwaccel_args:
+    - -hwaccel
+    - vaapi
+    - -hwaccel_device
+    - /dev/dri/renderD128
+    - -hwaccel_output_format
+    - yuv420p
 cameras:
   deck:
     fps: 6
@@ -68,17 +76,17 @@ cameras:
           min_area: 10000
           max_area: 100000
           threshold: 0.90
-  kitchen:
-    fps: 20
-    take_frame: 4
-    ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.117:554/live
-    objects:
-      track:
-        - person
-      filters:
-        person:
-          min_area: 40000
-          max_area: 100000
-          threshold: 0.90
+          #  kitchen:
+          #    fps: 20
+          #    take_frame: 4
+          #    ffmpeg:
+          #      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.117:554/live
+          #    objects:
+          #      track:
+          #        - person
+          #      filters:
+          #        person:
+          #          min_area: 40000
+          #          max_area: 100000
+          #          threshold: 0.90
 
