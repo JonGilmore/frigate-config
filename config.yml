@@ -17,7 +17,7 @@ cameras:
   deck:
     fps: 6
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.112:554/Streaming/Channels/1/
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/Streaming/Channels/1/
     mask: deck1.bmp
     objects:
       track:
@@ -30,7 +30,7 @@ cameras:
   doorbell:
     fps: 5
     ffmpeg:
-      input: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.46.114:554/mpeg/media.amp
+      input: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
     objects:
       track:
         - person
@@ -42,7 +42,7 @@ cameras:
   driveway:
     fps: 4
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.110:554/Streaming/Channels/1/
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
     mask: driveway.bmp
     objects:
       track:
@@ -55,7 +55,7 @@ cameras:
   garage:
     fps: 6
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.115:554/Streaming/Channels/1/
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/Streaming/Channels/1/
     objects:
       track:
         - person
@@ -67,7 +67,7 @@ cameras:
   deck_stairs:
     fps: 6
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.113:554/Streaming/Channels/1/
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
     objects:
       track:
         - person
@@ -80,7 +80,7 @@ cameras:
           #    fps: 20
           #    take_frame: 4
           #    ffmpeg:
-          #      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.46.117:554/live
+          #      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117:554/live
           #    objects:
           #      track:
           #        - person
