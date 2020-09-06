@@ -13,27 +13,38 @@ ffmpeg:
     - /dev/dri/renderD128
     - -hwaccel_output_format
     - yuv420p
+objects:
+  track:
+    - person
 cameras:
   deck:
-    fps: 6
+    fps: 5
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/Streaming/Channels/1/
-    mask: deck1.bmp
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+    save_clips:
+      enabled: True
+      pre_capture: 1
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
+    #mask: deck1.bmp
     objects:
-      track:
-        - person
       filters:
         person:
           min_area: 35000
-          max_area: 120000
+          max_area: 320000
           threshold: 0.90
   doorbell:
     fps: 5
     ffmpeg:
       input: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
+    save_clips:
+      enabled: True
+      pre_capture: 1
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
     objects:
-      track:
-        - person
       filters:
         person:
           min_area: 15000
@@ -43,10 +54,14 @@ cameras:
     fps: 4
     ffmpeg:
       input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
+    save_clips:
+      enabled: True
+      pre_capture: 1
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
     mask: driveway.bmp
     objects:
-      track:
-        - person
       filters:
         person:
           min_area: 10000
@@ -59,6 +74,8 @@ cameras:
     objects:
       track:
         - person
+        - car
+        - truck
       filters:
         person:
           min_area: 10000
@@ -69,24 +86,8 @@ cameras:
     ffmpeg:
       input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
     objects:
-      track:
-        - person
       filters:
         person:
           min_area: 10000
           max_area: 100000
           threshold: 0.90
-          #  kitchen:
-          #    fps: 20
-          #    take_frame: 4
-          #    ffmpeg:
-          #      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117:554/live
-          #    objects:
-          #      track:
-          #        - person
-          #      filters:
-          #        person:
-          #          min_area: 40000
-          #          max_area: 100000
-          #          threshold: 0.90
-
