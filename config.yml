@@ -71,6 +71,12 @@ cameras:
     fps: 6
     ffmpeg:
       input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/Streaming/Channels/1/
+    save_clips:
+      enabled: True
+      pre_capture: 1
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
     objects:
       track:
         - person
@@ -81,10 +87,16 @@ cameras:
           min_area: 10000
           max_area: 100000
           threshold: 0.75
-  deck_stairs:
+  deckstairs:
     fps: 6
     ffmpeg:
       input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
+    save_clips:
+      enabled: True
+      pre_capture: 1
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
     objects:
       filters:
         person:
