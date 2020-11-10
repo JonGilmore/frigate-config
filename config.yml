@@ -1,5 +1,10 @@
 web_port: 5000
 
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
+
 mqtt:
   host: 192.168.45.249
   topic_prefix: frigate
@@ -70,7 +75,7 @@ cameras:
   garage:
     fps: 6
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/Streaming/Channels/1/
+      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/cam/realmonitor?channel=1&subtype=0
     save_clips:
       enabled: True
       pre_capture: 1
@@ -78,10 +83,6 @@ cameras:
       show_timestamp: True
       draw_zones: False
     objects:
-      track:
-        - person
-        - car
-        - truck
       filters:
         person:
           min_area: 10000
