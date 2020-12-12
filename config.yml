@@ -1,5 +1,3 @@
-web_port: 5000
-
 detectors:
   coral:
     type: edgetpu
@@ -10,6 +8,12 @@ mqtt:
   topic_prefix: frigate
   user: frigate
   password: "{FRIGATE_MQTT_PASSWORD}"
+
+save_clips:
+  max_seconds: 300
+  retain:
+    default: 10
+
 ffmpeg:
   hwaccel_args:
     - -hwaccel
@@ -24,11 +28,23 @@ objects:
 cameras:
   deck:
     fps: 5
+    width: 1920
+    height: 1080
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - detect
+            - clips
     save_clips:
       enabled: True
       pre_capture: 1
+      objects:
+        - person
+      retain:
+        default: 10
+        objects:
+          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -41,11 +57,23 @@ cameras:
           threshold: 0.90
   doorbell:
     fps: 5
+    width: 1920
+    height: 1080
     ffmpeg:
-      input: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
+      inputs:
+        - path: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
+          roles:
+            - detect
+            - clips
     save_clips:
       enabled: True
       pre_capture: 1
+      objects:
+        - person
+      retain:
+        default: 10
+        objects:
+          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -57,11 +85,23 @@ cameras:
           threshold: 0.75
   driveway:
     fps: 4
+    width: 1920
+    height: 1080
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
+          roles:
+            - detect
+            - clips
     save_clips:
       enabled: True
       pre_capture: 1
+      objects:
+        - person
+      retain:
+        default: 10
+        objects:
+          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -74,11 +114,23 @@ cameras:
           threshold: 0.75
   garage:
     fps: 6
+    width: 1920
+    height: 1080
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/cam/realmonitor?channel=1&subtype=0
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/cam/realmonitor?channel=1&subtype=0
+          roles:
+            - detect
+            - clips
     save_clips:
       enabled: True
       pre_capture: 1
+      objects:
+        - person
+      retain:
+        default: 10
+        objects:
+          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -90,11 +142,23 @@ cameras:
           threshold: 0.75
   deckstairs:
     fps: 6
+    width: 1920
+    height: 1080
     ffmpeg:
-      input: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
+          roles:
+            - detect
+            - clips
     save_clips:
       enabled: True
       pre_capture: 1
+      objects:
+        - person
+      retain:
+        default: 10
+        objects:
+          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -104,3 +168,4 @@ cameras:
           min_area: 10000
           max_area: 100000
           threshold: 0.90
+
