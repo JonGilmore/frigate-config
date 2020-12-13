@@ -57,8 +57,8 @@ cameras:
           threshold: 0.90
   doorbell:
     fps: 5
-    width: 1920
-    height: 1080
+    width: 1280
+    height: 720
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
@@ -142,8 +142,8 @@ cameras:
           threshold: 0.75
   deckstairs:
     fps: 6
-    width: 1920
-    height: 1080
+    width: 1280
+    height: 720
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
