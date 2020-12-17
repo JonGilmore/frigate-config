@@ -12,7 +12,9 @@ mqtt:
 save_clips:
   max_seconds: 300
   retain:
-    default: 10
+    default: 8
+    objects:
+      person: 20
 
 ffmpeg:
   hwaccel_args:
@@ -36,15 +38,14 @@ cameras:
           roles:
             - detect
             - clips
+            - rtmp
     save_clips:
       enabled: True
       pre_capture: 1
       objects:
         - person
-      retain:
-        default: 10
-        objects:
-          person: 15  
+    rtmp:
+      enabled: True
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -65,15 +66,14 @@ cameras:
           roles:
             - detect
             - clips
+            - rtmp
+    rtmp:
+      enabled: True
     save_clips:
       enabled: True
       pre_capture: 1
       objects:
         - person
-      retain:
-        default: 10
-        objects:
-          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -93,15 +93,14 @@ cameras:
           roles:
             - detect
             - clips
+            - rtmp
+    rtmp:
+      enabled: True
     save_clips:
       enabled: True
       pre_capture: 1
       objects:
         - person
-      retain:
-        default: 10
-        objects:
-          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -122,15 +121,14 @@ cameras:
           roles:
             - detect
             - clips
+            - rtmp
+    rtmp:
+      enabled: True
     save_clips:
       enabled: True
       pre_capture: 1
       objects:
         - person
-      retain:
-        default: 10
-        objects:
-          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -150,15 +148,14 @@ cameras:
           roles:
             - detect
             - clips
+            - rtmp
+    rtmp:
+      enabled: True
     save_clips:
       enabled: True
       pre_capture: 1
       objects:
         - person
-      retain:
-        default: 10
-        objects:
-          person: 15  
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -168,4 +165,58 @@ cameras:
           min_area: 10000
           max_area: 100000
           threshold: 0.90
+  kitchen:
+    fps: 6
+    width: 1920
+    height: 1080
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117/live
+          roles:
+            - detect
+            - clips
+            - rtmp
+    rtmp:
+      enabled: True
+    save_clips:
+      enabled: True
+      pre_capture: 1
+      objects:
+        - person
+      retain:
+        default: 3
+        objects:
+          person: 10
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
+    objects:
+      filters:
+        person:
+          min_area: 10000
+          max_area: 100000
+          threshold: 0.75
+  loft:
+    fps: 6
+    width: 1920
+    height: 1080
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.122/live
+          roles:
+            - detect
+            - rtmp
+    rtmp:
+      enabled: True
+    save_clips:
+      enabled: False
+    snapshots:
+      show_timestamp: True
+      draw_zones: False
+    objects:
+      filters:
+        person:
+          min_area: 10000
+          max_area: 100000
+          threshold: 0.75
 
