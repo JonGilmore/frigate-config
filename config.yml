@@ -42,6 +42,7 @@ cameras:
     save_clips:
       enabled: True
       pre_capture: 1
+      post_capture: 3
       objects:
         - person
     rtmp:
@@ -55,7 +56,6 @@ cameras:
         person:
           min_area: 35000
           max_area: 320000
-          threshold: 0.90
   doorbell:
     fps: 5
     width: 1280
@@ -72,6 +72,7 @@ cameras:
     save_clips:
       enabled: True
       pre_capture: 1
+      post_capture: 3
       objects:
         - person
     snapshots:
@@ -82,7 +83,6 @@ cameras:
         person:
           min_area: 15000
           max_area: 200000
-          threshold: 0.75
   driveway:
     fps: 4
     width: 1920
@@ -99,6 +99,7 @@ cameras:
     save_clips:
       enabled: True
       pre_capture: 1
+      post_capture: 3
       objects:
         - person
     snapshots:
@@ -110,7 +111,6 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
-          threshold: 0.75
   garage:
     fps: 6
     width: 1920
@@ -127,6 +127,7 @@ cameras:
     save_clips:
       enabled: True
       pre_capture: 1
+      post_capture: 3
       objects:
         - person
     snapshots:
@@ -137,7 +138,6 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
-          threshold: 0.75
   deckstairs:
     fps: 6
     width: 1280
@@ -154,6 +154,7 @@ cameras:
     save_clips:
       enabled: True
       pre_capture: 1
+      post_capture: 3
       objects:
         - person
     snapshots:
@@ -164,7 +165,6 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
-          threshold: 0.90
   kitchen:
     fps: 6
     width: 1920
@@ -174,19 +174,11 @@ cameras:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117/live
           roles:
             - detect
-            - clips
             - rtmp
     rtmp:
       enabled: True
     save_clips:
-      enabled: True
-      pre_capture: 1
-      objects:
-        - person
-      retain:
-        default: 3
-        objects:
-          person: 10
+      enabled: False
     snapshots:
       show_timestamp: True
       draw_zones: False
@@ -195,7 +187,6 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
-          threshold: 0.75
   loft:
     fps: 6
     width: 1920
@@ -218,5 +209,4 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
-          threshold: 0.75
 
