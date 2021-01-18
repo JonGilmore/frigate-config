@@ -9,7 +9,7 @@ mqtt:
   user: frigate
   password: "{FRIGATE_MQTT_PASSWORD}"
 
-save_clips:
+clips:
   max_seconds: 300
   retain:
     default: 8
@@ -39,7 +39,7 @@ cameras:
             - detect
             - clips
             - rtmp
-    save_clips:
+    clips:
       enabled: True
       pre_capture: 1
       post_capture: 3
@@ -48,9 +48,8 @@ cameras:
     rtmp:
       enabled: True
     snapshots:
-      show_timestamp: True
-      draw_zones: False
-    #mask: deck1.bmp
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
@@ -69,15 +68,15 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
-    save_clips:
+    clips:
       enabled: True
       pre_capture: 1
       post_capture: 3
       objects:
         - person
     snapshots:
-      show_timestamp: True
-      draw_zones: False
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
@@ -96,16 +95,15 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
-    save_clips:
+    clips:
       enabled: True
       pre_capture: 1
       post_capture: 3
       objects:
         - person
     snapshots:
-      show_timestamp: True
-      draw_zones: False
-    mask: driveway.bmp
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
@@ -124,15 +122,15 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
-    save_clips:
+    clips:
       enabled: True
       pre_capture: 1
       post_capture: 3
       objects:
         - person
     snapshots:
-      show_timestamp: True
-      draw_zones: False
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
@@ -151,15 +149,15 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
-    save_clips:
+    clips:
       enabled: True
       pre_capture: 1
       post_capture: 3
       objects:
         - person
     snapshots:
-      show_timestamp: True
-      draw_zones: False
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
@@ -177,11 +175,11 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
-    save_clips:
+    clips:
       enabled: False
     snapshots:
-      show_timestamp: True
-      draw_zones: False
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
@@ -199,11 +197,11 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
-    save_clips:
+    clips:
       enabled: False
     snapshots:
-      show_timestamp: True
-      draw_zones: False
+      timestamp: True
+      bounding_box: True
     objects:
       filters:
         person:
