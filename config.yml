@@ -32,6 +32,10 @@ cameras:
     fps: 5
     width: 1920
     height: 1080
+    motion:
+      mask:
+        - 1636,337,1539,647,1749,704,1844,413
+        - 819,69,1920,113,1920,0,0,0,0,176
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
@@ -86,6 +90,11 @@ cameras:
     fps: 4
     width: 1920
     height: 1080
+    zones:
+      far:
+        coordinates: 964,104,1684,333,1612,564,574,216
+      near:
+        coordinates: 1322,1080,851,1014,335,764,93,435,584,223,1606,572
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
@@ -140,6 +149,10 @@ cameras:
     fps: 6
     width: 1280
     height: 720
+    motion:
+      mask:
+        - 1089,480,817,0,1280,0,1280,720,941,720
+        - 0,0,252,0,0,360
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
@@ -167,6 +180,10 @@ cameras:
     fps: 6
     width: 1920
     height: 1080
+    motion:
+      mask:
+        - 1366,0,1545,0,1535,183,1371,153
+        - 1782,607,1838,0,1920,0,1920,1080,1762,1080,1520,1080
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117/live
