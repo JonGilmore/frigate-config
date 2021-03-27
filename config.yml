@@ -27,6 +27,7 @@ ffmpeg:
 objects:
   track:
     - person
+    - car
 cameras:
   deck:
     fps: 5
@@ -91,10 +92,8 @@ cameras:
     width: 1920
     height: 1080
     zones:
-      far:
-        coordinates: 964,104,1684,333,1612,564,574,216
-      near:
-        coordinates: 1322,1080,851,1014,335,764,93,435,584,223,1606,572
+      driveway:
+        coordinates: 456,205,691,140,944,130,1285,209,1675,374,1546,739,1326,1080,372,1080,168,661,68,361
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
@@ -104,6 +103,10 @@ cameras:
             - rtmp
     rtmp:
       enabled: True
+    objects:
+      track:
+        - person
+        - car
     clips:
       enabled: True
       pre_capture: 1
@@ -118,6 +121,9 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
+        car:
+          min_area: 43000
+          max_area: 1000000
   garage:
     fps: 6
     width: 1920
