@@ -64,6 +64,9 @@ cameras:
     fps: 5
     width: 1280
     height: 720
+    motion:
+      mask:
+        - 1280,0,0,0,0,142,281,102,647,85,901,120,1125,210,1280,267
     ffmpeg:
       inputs:
         - path: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
@@ -88,11 +91,14 @@ cameras:
           min_area: 15000
           max_area: 200000
   driveway:
-    fps: 4
+    fps: 6
     width: 1920
     height: 1080
+    motion:
+      mask:
+        - 1920,0,0,0,0,105,281,71,654,33,1065,49,1525,151,1920,302
     zones:
-      driveway:
+      near:
         coordinates: 456,205,691,140,944,130,1285,209,1675,374,1546,739,1326,1080,372,1080,168,661,68,361
     ffmpeg:
       inputs:
@@ -128,6 +134,9 @@ cameras:
     fps: 6
     width: 1920
     height: 1080
+    motion:
+      mask:
+        - 1920,178,1920,0,1437,0,1438,146
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/cam/realmonitor?channel=1&subtype=0
