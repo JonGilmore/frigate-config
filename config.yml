@@ -3,18 +3,38 @@ detectors:
     type: edgetpu
     device: usb
 
+database:
+  path: /config/frigate.db
+
 mqtt:
   host: 192.168.45.249
   topic_prefix: frigate
   user: frigate
   password: "{FRIGATE_MQTT_PASSWORD}"
 
-clips:
-  max_seconds: 300
+record:
+  enabled: True
+  retain_days: 14
+  events:
+    enabled: True
+    max_seconds: 300
+    pre_capture: 3
+    post_capture: 3
+    retain:
+      default: 20
+      objects:
+        person: 30
+
+snapshots:
+  enabled: True
+  clean_copy: True
+  timestamp: True
+  bounding_box: False
+  crop: True
   retain:
-    default: 8
+    default: 10
     objects:
-      person: 20
+      person: 15
 
 ffmpeg:
   hwaccel_args:
@@ -24,46 +44,37 @@ ffmpeg:
     - /dev/dri/renderD128
     - -hwaccel_output_format
     - yuv420p
+
 objects:
   track:
     - person
     - car
 cameras:
   deck:
-    fps: 5
-    width: 1920
-    height: 1080
     motion:
       mask:
-        - 1636,337,1539,647,1749,704,1844,413
-        - 819,69,1920,113,1920,0,0,0,0,176
+        - 550,77,1280,98,1280,0,0,0,0,145
+        - 1280,255,1111,226,1007,403,1133,517
+        - 0,720,324,720,0,104
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
           roles:
             - detect
-            - clips
+            - record
             - rtmp
-    clips:
-      enabled: True
-      pre_capture: 1
-      post_capture: 3
-      objects:
-        - person
+    detect:
+      fps: 10
+      width: 1280
+      height: 720
     rtmp:
       enabled: True
-    snapshots:
-      timestamp: True
-      bounding_box: True
     objects:
       filters:
         person:
           min_area: 35000
           max_area: 320000
   doorbell:
-    fps: 5
-    width: 1280
-    height: 720
     motion:
       mask:
         - 1280,0,0,0,0,142,281,102,647,85,901,120,1125,210,1280,267
@@ -72,56 +83,42 @@ cameras:
         - path: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
           roles:
             - detect
-            - clips
+            - record
             - rtmp
     rtmp:
       enabled: True
-    clips:
-      enabled: True
-      pre_capture: 1
-      post_capture: 3
-      objects:
-        - person
-    snapshots:
-      timestamp: True
-      bounding_box: True
+    detect:
+      fps: 5
+      width: 1280
+      height: 720
     objects:
       filters:
         person:
           min_area: 15000
           max_area: 200000
   driveway:
-    fps: 6
-    width: 1920
-    height: 1080
     motion:
       mask:
         - 1920,0,0,0,0,105,281,71,654,33,1065,49,1525,151,1920,302
+        - 1262,1080,1329,922,1425,740,1620,705,1855,849,1920,1080
     zones:
       near:
-        coordinates: 456,205,691,140,944,130,1285,209,1675,374,1546,739,1326,1080,372,1080,168,661,68,361
+        coordinates: 456,205,1028,437,1571,643,1326,1080,372,1080,168,661,68,361
+      far:
+        coordinates: 920,120,1295,194,1678,352,1571,649,474,189
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
           roles:
             - detect
-            - clips
+            - record
             - rtmp
     rtmp:
       enabled: True
-    objects:
-      track:
-        - person
-        - car
-    clips:
-      enabled: True
-      pre_capture: 1
-      post_capture: 3
-      objects:
-        - person
-    snapshots:
-      timestamp: True
-      bounding_box: True
+    detect:
+      fps: 6
+      width: 1920
+      height: 1080
     objects:
       filters:
         person:
@@ -131,9 +128,6 @@ cameras:
           min_area: 43000
           max_area: 1000000
   garage:
-    fps: 6
-    width: 1920
-    height: 1080
     motion:
       mask:
         - 1920,178,1920,0,1437,0,1438,146
@@ -142,59 +136,43 @@ cameras:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - detect
-            - clips
+            - record
             - rtmp
     rtmp:
       enabled: True
-    clips:
-      enabled: True
-      pre_capture: 1
-      post_capture: 3
-      objects:
-        - person
-    snapshots:
-      timestamp: True
-      bounding_box: True
+    detect:
+      fps: 6
+      width: 1920
+      height: 1080
     objects:
       filters:
         person:
           min_area: 10000
           max_area: 100000
   deckstairs:
-    fps: 6
-    width: 1280
-    height: 720
     motion:
       mask:
         - 1089,480,817,0,1280,0,1280,720,941,720
-        - 0,0,252,0,0,360
+        - 0,0,286,0,278,253,116,214,0,380
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
           roles:
             - detect
-            - clips
+            - record
             - rtmp
     rtmp:
       enabled: True
-    clips:
-      enabled: True
-      pre_capture: 1
-      post_capture: 3
-      objects:
-        - person
-    snapshots:
-      timestamp: True
-      bounding_box: True
+    detect:
+      fps: 6
+      width: 1280
+      height: 720
     objects:
       filters:
         person:
           min_area: 10000
           max_area: 100000
   kitchen:
-    fps: 6
-    width: 1920
-    height: 1080
     motion:
       mask:
         - 1366,0,1545,0,1535,183,1371,153
@@ -205,35 +183,40 @@ cameras:
           roles:
             - detect
             - rtmp
+      hwaccel_args:
+        - -hwaccel
+        - qsv
+        - -qsv_device
+        - /dev/dri/renderD128
     rtmp:
       enabled: True
-    clips:
-      enabled: False
-    snapshots:
-      timestamp: True
-      bounding_box: True
+    detect:
+      fps: 6
+      width: 1920
+      height: 1080
     objects:
       filters:
         person:
           min_area: 10000
           max_area: 100000
   loft:
-    fps: 6
-    width: 1920
-    height: 1080
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.122/live
           roles:
             - detect
             - rtmp
+      hwaccel_args:
+        - -hwaccel
+        - qsv
+        - -qsv_device
+        - /dev/dri/renderD128
     rtmp:
       enabled: True
-    clips:
-      enabled: False
-    snapshots:
-      timestamp: True
-      bounding_box: True
+    detect:
+      fps: 6
+      width: 1920
+      height: 1080
     objects:
       filters:
         person:

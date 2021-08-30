@@ -137,3 +137,5 @@ dmypy.json
 clips
 clips/**
 cache/
+frigate.db*
+media
