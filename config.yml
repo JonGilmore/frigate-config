@@ -16,9 +16,8 @@ record:
   enabled: True
   retain_days: 14
   events:
-    enabled: True
     max_seconds: 300
-    pre_capture: 3
+    pre_capture: 2
     post_capture: 3
     retain:
       default: 20
@@ -48,7 +47,6 @@ ffmpeg:
 objects:
   track:
     - person
-    - car
 cameras:
   deck:
     motion:
@@ -120,6 +118,13 @@ cameras:
       width: 1920
       height: 1080
     objects:
+      track:
+        - person
+        - car
+        - bicycle
+        - motorcycle
+        - dog
+        - cat
       filters:
         person:
           min_area: 10000
@@ -182,6 +187,7 @@ cameras:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117/live
           roles:
             - detect
+            - record
             - rtmp
       hwaccel_args:
         - -hwaccel
@@ -205,6 +211,7 @@ cameras:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.122/live
           roles:
             - detect
+            - record
             - rtmp
       hwaccel_args:
         - -hwaccel
