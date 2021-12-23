@@ -72,6 +72,12 @@ cameras:
         person:
           min_area: 35000
           max_area: 320000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   doorbell:
     motion:
       mask:
@@ -94,10 +100,16 @@ cameras:
         person:
           min_area: 15000
           max_area: 200000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   driveway:
     motion:
       mask:
-        - 1920,0,0,0,0,105,281,71,654,33,1065,49,1525,151,1920,302
+        - 1920,0,0,0,0,105,174,133,389,90,563,67,807,66,1155,107,1524,192,1920,368
         - 1262,1080,1329,922,1425,740,1620,705,1855,849,1920,1080
     zones:
       near:
@@ -132,6 +144,12 @@ cameras:
         car:
           min_area: 43000
           max_area: 1000000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   garage:
     motion:
       mask:
@@ -154,6 +172,12 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   deckstairs:
     motion:
       mask:
@@ -177,10 +201,16 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   kitchen:
     motion:
       mask:
-        - 1366,0,1545,0,1535,183,1371,153
+        - 1323,0,1545,0,1535,183,1335,162
         - 1782,607,1838,0,1920,0,1920,1080,1762,1080,1520,1080
     ffmpeg:
       inputs:
@@ -205,6 +235,13 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
+          mask: 1323,0,1545,0,1535,183,1335,162
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   loft:
     ffmpeg:
       inputs:
@@ -229,4 +266,9 @@ cameras:
         person:
           min_area: 10000
           max_area: 100000
-
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
