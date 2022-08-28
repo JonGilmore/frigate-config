@@ -1,3 +1,4 @@
+---
 detectors:
   coral:
     type: edgetpu
@@ -7,33 +8,38 @@ database:
   path: /config/frigate.db
 
 mqtt:
-  host: 192.168.45.249
+  host: 192.168.30.249
   topic_prefix: frigate
   user: frigate
   password: "{FRIGATE_MQTT_PASSWORD}"
 
 record:
   enabled: True
-  retain_days: 14
+  retain:
+    days: 7
+    mode: motion
   events:
-    max_seconds: 300
     pre_capture: 2
-    post_capture: 3
     retain:
       default: 20
-      objects:
-        person: 30
+      mode: active_objects
+
+timestamp_style:
+  position: "tr"
+  effect: solid
 
 snapshots:
   enabled: True
   clean_copy: True
   timestamp: True
-  bounding_box: False
   crop: True
   retain:
     default: 10
     objects:
       person: 15
+
+rtmp:
+  enabled: True
 
 ffmpeg:
   hwaccel_args:
@@ -44,29 +50,166 @@ ffmpeg:
     - -hwaccel_output_format
     - yuv420p
 
+detect:
+  fps: 5
+  width: 1280
+  height: 720
+
 objects:
   track:
     - person
+    - cat
+    - dog
+
 cameras:
+  doorbell:
+    motion:
+      mask:
+        - 1280,0,1280,720,990,720,1035,571,1065,384,1025,186,955,41
+        - 182,201,347,46,595,0,0,0,0,720,273,720
+    zones:
+      doorbell_near:
+        coordinates: 934,720,1005,570,698,504,643,451,492,463,404,567,370,720
+    ffmpeg:
+      inputs:
+        - path: rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1920x1080
+          roles:
+            - record
+        - path: rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=640x480
+          roles:
+            - rtmp
+        - path: rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1280x720
+          roles:
+            - detect
+    objects:
+      filters:
+        cat:
+          mask:
+            - 182,201,347,46,595,0,0,0,0,720,273,720
+        dog:
+          mask:
+            - 182,201,347,46,595,0,0,0,0,720,273,720
+        person:
+          mask:
+            - 182,201,347,46,595,0,0,0,0,720,273,720
+          min_area: 35000
+          max_area: 320000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
+  workshop:
+    motion:
+      mask:
+        - 1280,0,1280,278,537,0
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.131:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.131:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.131:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+          roles:
+            - detect
+    objects:
+      filters:
+        person:
+          min_area: 32000
+          max_area: 320000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
   deck:
     motion:
       mask:
-        - 550,77,1280,98,1280,0,0,0,0,145
-        - 1280,255,1111,226,1007,403,1133,517
-        - 0,720,324,720,0,104
+        - 563,720,542,688,468,656,281,720
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.112:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
           roles:
             - detect
+    objects:
+      filters:
+        cat:
+          mask:
+            - 327,96,699,41,1280,124,1280,0,0,0,0,242
+        dog:
+          mask:
+            - 327,96,699,41,1280,124,1280,0,0,0,0,242
+        person:
+          mask:
+            - 327,96,699,41,1280,124,1280,0,0,0,0,242
+          min_area: 30000
+          max_area: 130000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
+  frontyard:
+    motion:
+      mask:
+        - 1280,720,1280,654,1173,720
+        - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
             - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
             - rtmp
-    detect:
-      fps: 10
-      width: 1280
-      height: 720
-    rtmp:
-      enabled: True
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+          roles:
+            - detect
+    objects:
+      filters:
+        cat:
+          mask:
+            - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+        dog:
+          mask:
+            - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+        person:
+          mask:
+            - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+          min_area: 8000
+          max_area: 100000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
+  garage:
+    motion:
+      mask:
+        - 802,50,640,40,638,0,806,0
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+          roles:
+            - detect
     objects:
       filters:
         person:
@@ -78,194 +221,133 @@ cameras:
       crop: True
       quality: 100
       height: 500
-  doorbell:
-    motion:
-      mask:
-        - 1280,0,0,0,0,142,281,102,647,85,901,120,1125,210,1280,267
-    ffmpeg:
-      inputs:
-        - path: rtsp://{FRIGATE_DOORBIRD_USER}:{FRIGATE_DOORBIRD_PASSWORD}@192.168.45.114:554/mpeg/media.amp
-          roles:
-            - detect
-            - record
-            - rtmp
-    rtmp:
-      enabled: True
-    detect:
-      fps: 5
-      width: 1280
-      height: 720
-    objects:
-      filters:
-        person:
-          min_area: 15000
-          max_area: 200000
-    mqtt:
-      timestamp: False
-      bounding_box: False
-      crop: True
-      quality: 100
-      height: 500
   driveway:
     motion:
       mask:
-        - 1920,0,0,0,0,105,174,133,389,90,563,67,807,66,1155,107,1524,192,1920,368
-        - 1262,1080,1329,922,1425,740,1620,705,1855,849,1920,1080
+        - 1280,0,988,0,998,68,1160,196,1280,235
     zones:
-      near:
-        coordinates: 456,205,1028,437,1571,643,1326,1080,372,1080,168,661,68,361
-      far:
-        coordinates: 920,120,1295,194,1678,352,1571,649,474,189
+      driveway_near:
+        coordinates: 660,68,905,103,225,393,162,231,379,142
+      driveway_far:
+        coordinates: 393,720,1010,720,1006,524,1137,262,1054,170,905,108,235,397
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.110:554/Streaming/Channels/1/
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
           roles:
             - detect
-            - record
-            - rtmp
-    rtmp:
-      enabled: True
-    detect:
-      fps: 6
-      width: 1920
-      height: 1080
     objects:
+      filters:
+        car:
+          mask:
+            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+        cat:
+          mask:
+            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+        dog:
+          mask:
+            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+        motorcycle:
+          mask:
+            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+        person:
+          mask:
+            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+          min_area: 9000
+          max_area: 105000
       track:
         - person
-        - car
-        - bicycle
-        - motorcycle
-        - dog
         - cat
-      filters:
-        person:
-          min_area: 10000
-          max_area: 100000
-        car:
-          min_area: 43000
-          max_area: 1000000
+        - dog
+        - car
+        - motorcycle
     mqtt:
       timestamp: False
       bounding_box: False
       crop: True
       quality: 100
       height: 500
-  garage:
+  grilldeck:
+    zones:
+      grilldeck_stairs:
+        coordinates: 1045,412,1140,593,927,720,696,720,650,552
+      grilldeck_main:
+        coordinates: 734,465,1052,387,885,123,366,114,262,0,56,96,292,720,695,720,654,549
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+          roles:
+            - detect
+    objects:
+      filters:
+        person:
+          min_area: 35000
+          max_area: 180000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
+  mudroom:
+    ffmpeg:
+      inputs:
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+          roles:
+            - detect
+    objects:
+      filters:
+        person:
+          min_area: 35000
+          max_area: 180000
+    mqtt:
+      timestamp: False
+      bounding_box: False
+      crop: True
+      quality: 100
+      height: 500
+  patio:
     motion:
       mask:
-        - 1920,178,1920,0,1437,0,1438,146
+        - 161,52,474,0,0,0,0,203
+    zones:
+      patio_near:
+        coordinates: 1280,720,1280,399,1118,394,347,629,354,720
+      patio_far:
+        coordinates: 282,453,826,146,1098,110,1218,217,1166,358,293,628
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.115:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+          roles:
+            - record
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+          roles:
+            - rtmp
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
           roles:
             - detect
-            - record
-            - rtmp
-    rtmp:
-      enabled: True
-    detect:
-      fps: 6
-      width: 1920
-      height: 1080
     objects:
       filters:
         person:
-          min_area: 10000
-          max_area: 100000
-    mqtt:
-      timestamp: False
-      bounding_box: False
-      crop: True
-      quality: 100
-      height: 500
-  deckstairs:
-    motion:
-      mask:
-        - 1089,480,817,0,1280,0,1280,720,941,720
-        - 0,0,286,0,278,253,116,214,0,380
-    ffmpeg:
-      inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.113:554/Streaming/Channels/1/
-          roles:
-            - detect
-            - record
-            - rtmp
-    rtmp:
-      enabled: True
-    detect:
-      fps: 6
-      width: 1280
-      height: 720
-    objects:
-      filters:
-        person:
-          min_area: 10000
-          max_area: 100000
-    mqtt:
-      timestamp: False
-      bounding_box: False
-      crop: True
-      quality: 100
-      height: 500
-  kitchen:
-    motion:
-      mask:
-        - 1323,0,1545,0,1535,183,1335,162
-        - 1782,607,1838,0,1920,0,1920,1080,1762,1080,1520,1080
-    ffmpeg:
-      inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.117/live
-          roles:
-            - detect
-            - record
-            - rtmp
-      hwaccel_args:
-        - -hwaccel
-        - qsv
-        - -qsv_device
-        - /dev/dri/renderD128
-    rtmp:
-      enabled: True
-    detect:
-      fps: 6
-      width: 1920
-      height: 1080
-    objects:
-      filters:
-        person:
-          min_area: 10000
-          max_area: 100000
-          mask: 1323,0,1545,0,1535,183,1335,162
-    mqtt:
-      timestamp: False
-      bounding_box: False
-      crop: True
-      quality: 100
-      height: 500
-  loft:
-    ffmpeg:
-      inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.45.122/live
-          roles:
-            - detect
-            - record
-            - rtmp
-      hwaccel_args:
-        - -hwaccel
-        - qsv
-        - -qsv_device
-        - /dev/dri/renderD128
-    rtmp:
-      enabled: True
-    detect:
-      fps: 6
-      width: 1920
-      height: 1080
-    objects:
-      filters:
-        person:
-          min_area: 10000
-          max_area: 100000
+          min_area: 5000
+          max_area: 200000
     mqtt:
       timestamp: False
       bounding_box: False
