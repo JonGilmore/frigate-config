@@ -16,12 +16,12 @@ mqtt:
 record:
   enabled: True
   retain:
-    days: 7
+    days: 14
     mode: motion
   events:
     pre_capture: 2
     retain:
-      default: 20
+      default: 40
       mode: active_objects
 
 timestamp_style:
@@ -31,12 +31,12 @@ timestamp_style:
 snapshots:
   enabled: True
   clean_copy: True
-  timestamp: True
+  timestamp: False
   crop: True
   retain:
-    default: 10
+    default: 20
     objects:
-      person: 15
+      person: 30
 
 rtmp:
   enabled: True
@@ -106,18 +106,26 @@ cameras:
         - 1280,0,1280,278,537,0
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.131:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.131:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.131:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
           roles:
             - detect
     objects:
       filters:
+        cat:
+          mask:
+            - 1280,0,1280,278,537,0
+        dog:
+          mask:
+            - 1280,0,1280,278,537,0
         person:
+          mask:
+            - 1280,0,1280,278,537,0
           min_area: 32000
           max_area: 320000
     mqtt:
@@ -146,13 +154,15 @@ cameras:
         cat:
           mask:
             - 327,96,699,41,1280,124,1280,0,0,0,0,242
+          min_area: 9000
         dog:
           mask:
             - 327,96,699,41,1280,124,1280,0,0,0,0,242
+          min_area: 9000
         person:
           mask:
             - 327,96,699,41,1280,124,1280,0,0,0,0,242
-          min_area: 30000
+          min_area: 16000
           max_area: 130000
     mqtt:
       timestamp: False
@@ -164,7 +174,7 @@ cameras:
     motion:
       mask:
         - 1280,720,1280,654,1173,720
-        - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+        - 202,624,215,430,64,327,36,137,252,21,377,102,393,0,0,0,0,720,290,720
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
@@ -180,16 +190,16 @@ cameras:
       filters:
         cat:
           mask:
-            - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+            - 202,624,215,430,64,327,36,137,252,21,377,102,393,0,0,0,0,720,290,720
         dog:
           mask:
-            - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
+            - 202,624,215,430,64,327,36,137,252,21,377,102,393,0,0,0,0,720,290,720
         person:
           mask:
-            - 29,408,36,137,252,21,379,86,393,0,0,0,0,720,290,720
-            - 427,475,501,443,558,480,559,616,511,630,424,526
+            - 202,624,215,430,64,327,36,137,252,21,377,102,393,0,0,0,0,720,290,720
+            - 409,460,508,424,578,477,585,624,493,651,406,538
           min_area: 8000
-          max_area: 100000
+          max_area: 130000
     mqtt:
       timestamp: False
       bounding_box: False
@@ -226,11 +236,20 @@ cameras:
     motion:
       mask:
         - 1280,0,988,0,998,68,1160,196,1280,235
+    record:
+      events:
+        required_zones:
+          - driveway_near
+          - driveway_far
+    snapshots:
+      required_zones:
+        - driveway_near
+        - driveway_far
     zones:
       driveway_near:
-        coordinates: 660,68,905,103,225,393,162,231,379,142
-      driveway_far:
         coordinates: 393,720,1010,720,1006,524,1137,262,1054,170,905,108,235,397
+      driveway_far:
+        coordinates: 655,77,905,103,225,393,171,234,384,150
     ffmpeg:
       inputs:
         - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
@@ -246,21 +265,21 @@ cameras:
       filters:
         car:
           mask:
-            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+            - 1280,411,1280,0,0,0,0,315,251,189,505,105,781,45,971,33,1127,121,1080,369
           min_area: 10000
         cat:
           mask:
-            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+            - 1280,411,1280,0,0,0,0,315,251,189,505,105,781,45,971,33,1127,121,1080,369
         dog:
           mask:
-            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+            - 1280,411,1280,0,0,0,0,315,251,189,505,105,781,45,971,33,1127,121,1080,369
         motorcycle:
           mask:
-            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+            - 1280,411,1280,0,0,0,0,315,251,189,505,105,781,45,971,33,1127,121,1080,369
           min_area: 1000
         person:
           mask:
-            - 1280,411,1280,0,1001,0,973,90,1143,137,1080,369
+            - 1280,411,1280,0,0,0,0,315,251,189,505,105,781,45,971,33,1127,121,1080,369
           min_area: 5000
           max_area: 105000
       track:
@@ -276,6 +295,9 @@ cameras:
       quality: 100
       height: 500
   grilldeck:
+    motion:
+      mask:
+        - 929,156,1013,282,1038,402,914,491,803,450,727,257,790,143
     zones:
       grilldeck_stairs:
         coordinates: 1045,412,1140,593,927,720,696,720,650,552
@@ -294,8 +316,16 @@ cameras:
             - detect
     objects:
       filters:
+        cat:
+          mask:
+            - 929,156,1013,282,1038,402,914,491,803,450,727,257,790,143
+        dog:
+          mask:
+            - 929,156,1013,282,1038,402,914,491,803,450,727,257,790,143
         person:
-          min_area: 30000
+          mask:
+            - 929,156,1013,282,1038,402,914,491,803,450,727,257,790,143
+          min_area: 18000
           max_area: 180000
     mqtt:
       timestamp: False
@@ -348,7 +378,15 @@ cameras:
             - detect
     objects:
       filters:
+        cat:
+          mask:
+            - 161,52,474,0,0,0,0,203
+        dog:
+          mask:
+            - 161,52,474,0,0,0,0,203
         person:
+          mask:
+            - 161,52,474,0,0,0,0,203
           min_area: 4000
           max_area: 180000
     mqtt:
