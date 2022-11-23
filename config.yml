@@ -69,7 +69,7 @@ cameras:
     ffmpeg:
       input_args: "-avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -rtsp_transport tcp -use_wallclock_as_timestamps 1 -an"
       inputs:
-        - path: rtsp://192.168.30.2:7447/q1IDq7FKUiVO0OXP
+        - path: rtsp://192.168.30.2:7447/{FRIGATE_UI}
           roles:
             - detect
             - record
