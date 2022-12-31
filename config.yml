@@ -130,13 +130,13 @@ cameras:
         - 1280,0,1280,720,685,720,774,465,958,333,1088,360,1176,197,537,0
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -170,13 +170,13 @@ cameras:
         coordinates: 444,720,1090,720,1187,578,1249,427,1115,351,1033,420
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -213,13 +213,13 @@ cameras:
         coordinates: 566,60,768,44,989,122,720,153
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -264,13 +264,13 @@ cameras:
         - 802,50,640,40,638,0,806,0
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -304,13 +304,13 @@ cameras:
         coordinates: 649,85,905,103,225,393,177,241,388,158
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -357,13 +357,13 @@ cameras:
         coordinates: 734,465,1052,387,885,123,366,114,262,0,56,96,292,720,695,720,654,549
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -388,13 +388,13 @@ cameras:
   mudroom:
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
@@ -419,13 +419,13 @@ cameras:
         coordinates: 282,453,826,146,1098,110,1218,217,1166,358,293,628
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=00&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=0
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=01&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=1
           roles:
             - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=02&authbasic=[AUTH]
+        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=2
           roles:
             - detect
     objects:
