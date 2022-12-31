@@ -1,8 +1,11 @@
 ---
 detectors:
-  coral:
+  coral1:
     type: edgetpu
-    device: usb
+    device: usb:0
+  coral2:
+    type: edgetpu
+    device: usb:1
 
 database:
   path: /config/frigate.db
@@ -42,13 +45,12 @@ rtmp:
   enabled: True
 
 ffmpeg:
-  hwaccel_args:
-    - -hwaccel
-    - vaapi
-    - -hwaccel_device
-    - /dev/dri/renderD128
-    - -hwaccel_output_format
-    - yuv420p
+  input_args:
+    - -c:v
+    - h264_cuvid
+    - -rtsp_transport
+    - tcp
+  hwaccel_args: -c:v h264_cuvid
 
 detect:
   fps: 5
@@ -65,25 +67,25 @@ objects:
       min_score: 0.6
 
 cameras:
-  theta:
-    ffmpeg:
-      input_args: "-avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -rtsp_transport tcp -use_wallclock_as_timestamps 1 -an"
-      inputs:
-        - path: rtsp://192.168.30.2:7447/{FRIGATE_UI}
-          roles:
-            - detect
-            - record
-            - rtmp
-    detect:
-      width: 1280
-      height: 1280
-      fps: 15
-    mqtt:
-      timestamp: False
-      bounding_box: False
-      crop: True
-      quality: 100
-      height: 500
+#  theta:
+#    ffmpeg:
+#      input_args: "-avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -rtsp_transport tcp -use_wallclock_as_timestamps 1 -an"
+#      inputs:
+#        - path: rtsp://192.168.30.2:7447/{FRIGATE_UI}
+#          roles:
+#            - detect
+#            - record
+#            - rtmp
+#    detect:
+#      width: 1280
+#      height: 1280
+#      fps: 15
+#    mqtt:
+#      timestamp: False
+#      bounding_box: False
+#      crop: True
+#      quality: 100
+#      height: 500
   doorbell:
     motion:
       mask:
