@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=http://192.168.30.249:5005/api/config/schema.json
 detectors:
   coral1:
     type: edgetpu
@@ -41,16 +42,8 @@ snapshots:
     objects:
       person: 30
 
-rtmp:
-  enabled: True
-
 ffmpeg:
-  input_args:
-    - -c:v
-    - h264_cuvid
-    - -rtsp_transport
-    - tcp
-  hwaccel_args: -c:v h264_cuvid
+  hwaccel_args: preset-nvidia-h264
 
 detect:
   fps: 5
@@ -66,26 +59,68 @@ objects:
     person:
       min_score: 0.6
 
+go2rtc:
+  streams:
+    doorbell:
+      - rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1920x1080
+    doorbell_sub:
+      - rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1280x720
+    workshop:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=0
+    workshop_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=2
+    deck:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=0
+    deck_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=2
+    frontyard:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=0
+    frontyard_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=2
+    garage:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=0
+    garage_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=2
+    driveway:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=0
+    driveway_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=2
+    grilldeck:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=0
+    grilldeck_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=2
+    mudroom:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=0
+    mudroom_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=2
+    patio:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=0
+    patio_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=2
+  webrtc:
+    candidates:
+      - 192.168.30.249:8555
+      - stun:8555
+
 cameras:
-#  theta:
-#    ffmpeg:
-#      input_args: "-avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -rtsp_transport tcp -use_wallclock_as_timestamps 1 -an"
-#      inputs:
-#        - path: rtsp://192.168.30.2:7447/{FRIGATE_UI}
-#          roles:
-#            - detect
-#            - record
-#            - rtmp
-#    detect:
-#      width: 1280
-#      height: 1280
-#      fps: 15
-#    mqtt:
-#      timestamp: False
-#      bounding_box: False
-#      crop: True
-#      quality: 100
-#      height: 500
+  #  theta:
+  #    ffmpeg:
+  #      input_args: "-avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -rtsp_transport tcp -use_wallclock_as_timestamps 1 -an"
+  #      inputs:
+  #        - path: rtsp://192.168.30.2:7447/{FRIGATE_UI}
+  #          roles:
+  #            - detect
+  #            - record
+  #    detect:
+  #      width: 1280
+  #      height: 1280
+  #      fps: 15
+  #    mqtt:
+  #      timestamp: False
+  #      bounding_box: False
+  #      crop: True
+  #      quality: 100
+  #      height: 500
   doorbell:
     motion:
       mask:
@@ -96,13 +131,10 @@ cameras:
         coordinates: 934,720,1005,570,698,504,643,451,492,463,404,567,370,720
     ffmpeg:
       inputs:
-        - path: rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1920x1080
+        - path: rtsp://192.168.30.249:8554/doorbell
           roles:
             - record
-        - path: rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=640x480
-          roles:
-            - rtmp
-        - path: rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1280x720
+        - path: rtsp://192.168.30.249:8554/doorbell_sub
           roles:
             - detect
     objects:
@@ -129,14 +161,13 @@ cameras:
       mask:
         - 1280,0,1280,720,685,720,774,465,958,333,1088,360,1176,197,537,0
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/workshop
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/workshop_sub
           roles:
             - detect
     objects:
@@ -170,13 +201,10 @@ cameras:
         coordinates: 444,720,1090,720,1187,578,1249,427,1115,351,1033,420
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/deck
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.132:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/deck_sub
           roles:
             - detect
     objects:
@@ -213,13 +241,10 @@ cameras:
         coordinates: 566,60,768,44,989,122,720,153
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/frontyard
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.133:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/frontyard_sub
           roles:
             - detect
     objects:
@@ -264,13 +289,10 @@ cameras:
         - 802,50,640,40,638,0,806,0
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/garage
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.134:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/garage_sub
           roles:
             - detect
     objects:
@@ -304,13 +326,10 @@ cameras:
         coordinates: 649,85,905,103,225,393,177,241,388,158
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/driveway
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.137:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/driveway_sub
           roles:
             - detect
     objects:
@@ -357,13 +376,10 @@ cameras:
         coordinates: 734,465,1052,387,885,123,366,114,262,0,56,96,292,720,695,720,654,549
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/grilldeck
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.135:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/grilldeck_sub
           roles:
             - detect
     objects:
@@ -388,13 +404,10 @@ cameras:
   mudroom:
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/mudroom
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.136:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/mudroom_sub
           roles:
             - detect
     objects:
@@ -419,13 +432,10 @@ cameras:
         coordinates: 282,453,826,146,1098,110,1218,217,1166,358,293,628
     ffmpeg:
       inputs:
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=0
+        - path: rtsp://192.168.30.249:8554/patio
           roles:
             - record
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=1
-          roles:
-            - rtmp
-        - path: rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=2
+        - path: rtsp://192.168.30.249:8554/patio_sub
           roles:
             - detect
     objects:
