@@ -44,6 +44,8 @@ snapshots:
 
 ffmpeg:
   hwaccel_args: preset-nvidia-h264
+  output_args:
+    record: preset-record-generic-audio-aac
 
 detect:
   fps: 5
@@ -132,9 +134,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/doorbell
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/doorbell_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -165,9 +169,11 @@ cameras:
         record: preset-record-generic-audio-copy
       inputs:
         - path: rtsp://192.168.30.249:8554/workshop
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/workshop_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -202,9 +208,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/deck
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/deck_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -242,9 +250,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/frontyard
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/frontyard_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -290,9 +300,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/garage
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/garage_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -327,9 +339,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/driveway
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/driveway_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -377,9 +391,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/grilldeck
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/grilldeck_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -405,9 +421,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/mudroom
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/mudroom_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
@@ -433,9 +451,11 @@ cameras:
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/patio
+          input_args: preset-rtsp-restream
           roles:
             - record
         - path: rtsp://192.168.30.249:8554/patio_sub
+          input_args: preset-rtsp-restream
           roles:
             - detect
     objects:
