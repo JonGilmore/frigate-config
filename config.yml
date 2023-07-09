@@ -131,6 +131,8 @@ cameras:
     zones:
       doorbell_near:
         coordinates: 934,720,1005,570,698,504,643,451,492,463,404,567,370,720
+      doorbell_far:
+        coordinates: 699,498,842,538,1011,569,1035,459,694,421
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/doorbell
@@ -152,7 +154,7 @@ cameras:
         person:
           mask:
             - 182,201,347,46,595,0,0,0,0,720,273,720
-          min_area: 35000
+          min_area: 30000
           max_area: 320000
     mqtt:
       timestamp: False
