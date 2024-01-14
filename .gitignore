@@ -139,3 +139,7 @@ clips/**
 cache/
 frigate.db*
 media
+model_cache/
+model_cache/**
+.vacuum
+.timeline

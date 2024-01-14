@@ -8,6 +8,9 @@ detectors:
     type: edgetpu
     device: usb:1
 
+# model:
+#   path: plus://08fb01ef195939a593c73021518bddcc
+
 database:
   path: /config/frigate.db
 
@@ -20,13 +23,12 @@ mqtt:
 record:
   enabled: True
   retain:
-    days: 14
-    mode: motion
+    mode: all
   events:
     pre_capture: 2
     retain:
       default: 40
-      mode: active_objects
+      mode: all
 
 timestamp_style:
   position: "tr"
@@ -154,7 +156,7 @@ cameras:
         person:
           mask:
             - 182,201,347,46,595,0,0,0,0,720,273,720
-          min_area: 30000
+          min_area: 10000
           max_area: 320000
     mqtt:
       timestamp: False
@@ -188,15 +190,17 @@ cameras:
         cat:
           mask:
             - 1280,0,1280,720,582,720,721,437,926,316,1088,360,1176,197,537,0
-          threshold: 0.72
+          min_area: 5000
+          #threshold: 0.72
         dog:
           mask:
             - 1280,0,1280,720,582,720,721,437,926,316,1088,360,1176,197,537,0
-          threshold: 0.72
+          min_area: 5000
+          #threshold: 0.72
         person:
           mask:
             - 1280,0,1280,720,582,720,721,437,926,316,1088,360,1176,197,537,0
-          threshold: 0.72
+          #threshold: 0.72
           min_area: 32000
           max_area: 320000
     mqtt:
@@ -259,6 +263,10 @@ cameras:
         coordinates: 547,45,709,30,995,125,1196,228,1280,294,1280,686,837,234
       front_porch:
         coordinates: 451,720,279,720,105,507,141,294,390,235
+      doorbell_far:
+        coordinates: 375,420,709,360,581,168,358,207
+      doorbell_near:
+        coordinates: 133,264,109,444,372,395,350,215
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/frontyard
@@ -324,6 +332,8 @@ cameras:
         person:
           min_area: 35000
           max_area: 320000
+          min_score: 0.75
+          threshold: 0.75
     mqtt:
       timestamp: False
       bounding_box: False
@@ -415,9 +425,11 @@ cameras:
         cat:
           mask:
             - 877,0,1280,0,1280,197,1280,387,1108,342,914,491,803,450,727,257,790,143
+          max_area: 45000
         dog:
           mask:
             - 877,0,1280,0,1280,197,1280,387,1108,342,914,491,803,450,727,257,790,143
+          max_area: 55000
         person:
           mask:
             - 877,0,1280,0,1280,197,1280,387,1108,342,914,491,803,450,727,257,790,143
@@ -459,7 +471,7 @@ cameras:
   patio:
     motion:
       mask:
-        - 161,52,474,0,0,0,0,203
+        - 291,26,362,140,420,476,517,470,475,150,465,0,0,0,0,203
     zones:
       patio_near:
         coordinates: 1280,720,1280,399,1118,394,0,635,0,720
@@ -479,15 +491,17 @@ cameras:
       filters:
         cat:
           mask:
-            - 161,52,474,0,0,0,0,203
+            - 291,26,362,140,420,476,517,470,475,150,465,0,0,0,0,203
         dog:
           mask:
-            - 161,52,474,0,0,0,0,203
+            - 291,26,362,140,420,476,517,470,475,150,465,0,0,0,0,203
         person:
           mask:
-            - 161,52,474,0,0,0,0,203
+            - 291,26,362,140,420,476,517,470,475,150,465,0,0,0,0,203
           min_area: 4000
-          max_area: 180000
+          max_area: 142000
+          min_score: 0.76
+          threshold: 0.76
     mqtt:
       timestamp: False
       bounding_box: False
