@@ -143,3 +143,5 @@ model_cache/
 model_cache/**
 .vacuum
 .timeline
+.jwt_secret
+.exports
