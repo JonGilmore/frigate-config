@@ -8,8 +8,12 @@ detectors:
     type: edgetpu
     device: usb:1
 
+logger:
+  logs:
+    frigate.record.maintainer: debug
+
 model:
-  path: "{FRIGATE_PLUS}"
+  path: plus://04127592da4363d9a2cc0e1a1ea80ac7
 
 database:
   path: /config/frigate.db
@@ -18,7 +22,7 @@ mqtt:
   host: 192.168.30.249
   topic_prefix: frigate
   user: frigate
-  password: "{FRIGATE_MQTT_PASSWORD}"
+  password: '{FRIGATE_MQTT_PASSWORD}'
 
 record:
   enabled: true
@@ -57,14 +61,15 @@ detect:
 objects:
   track:
     - person
-    - cat
+    - face
+    - license_plate
     - dog
-  filters:
-    person:
-      min_score: 0.6
-      threshold: 0.8
-    dog:
-      threshold: 0.86
+    - cat
+    - car
+    - amazon
+    - fedex
+    - ups
+    - package
 
 go2rtc:
   streams:
@@ -149,6 +154,12 @@ cameras:
           roles:
             - detect
     objects:
+      track:
+        - person
+        - face
+        - dog
+        - cat
+        - package
       filters:
         cat: {}
         dog: {}
@@ -174,7 +185,8 @@ cameras:
       mask: 1,0,1,1,0.455,1,0.563,0.607,0.723,0.439,0.85,0.5,0.868,0.26,0.42,0
     zones:
       workshop_far:
-        coordinates: 0.219,0.409,0.284,0.489,0.383,0.54,0.6,0.561,0.79,0.364,0.575,0.193,0.3,0.061,0.104,0.046,0.062,0.379
+        coordinates: 
+          0.219,0.409,0.284,0.489,0.383,0.54,0.6,0.561,0.79,0.364,0.575,0.193,0.3,0.061,0.104,0.046,0.062,0.379
         inertia: 3
       workshop_near:
         coordinates: 0.604,0.568,0.457,1,0.18,1,0.05,0.557,0.212,0.412,0.375,0.543
@@ -192,6 +204,11 @@ cameras:
           roles:
             - detect
     objects:
+      track:
+        - person
+        - face
+        - dog
+        - cat
       filters:
         cat:
           min_area: 5000
@@ -216,10 +233,12 @@ cameras:
         required_zones: workshop_near
   deck:
     motion:
-      mask: 0.098,0.489,0,0.46,0,0,1,0,1,0.407,0.893,0.342,0.833,0.431,0.649,0.329,0.432,0.421
+      mask: 
+        0.098,0.489,0,0.46,0,0,1,0,1,0.407,0.893,0.342,0.833,0.431,0.649,0.329,0.432,0.421
     zones:
       deck_far:
-        coordinates: 0.335,1,0.888,0.62,0.969,0.661,1,0.547,0.967,0.436,0.879,0.369,0.78,0.523,0.644,0.422,0.257,0.706
+        coordinates: 
+          0.335,1,0.888,0.62,0.969,0.661,1,0.547,0.967,0.436,0.879,0.369,0.78,0.523,0.644,0.422,0.257,0.706
         inertia: 3
       deck_near:
         coordinates: 0.347,1,0.852,1,0.927,0.803,0.97,0.663,0.888,0.622
@@ -235,6 +254,11 @@ cameras:
           roles:
             - detect
     objects:
+      track:
+        - person
+        - face
+        - dog
+        - cat
       filters:
         cat:
           min_area: 9000
@@ -243,6 +267,7 @@ cameras:
         person:
           min_area: 16000
           max_area: 130000
+          mask: 0.47,0.773,0.558,0.763,0.534,0.453,0.46,0.469
     mqtt:
       timestamp: false
       bounding_box: false
@@ -254,19 +279,14 @@ cameras:
         required_zones:
           - deck_far
           - deck_near
+      alerts:
+        required_zones: deck_near
   frontyard:
     motion:
       mask:
-        - 1280,720,1280,654,1173,720
-        - 202,624,215,430,64,327,36,137,252,21,377,102,393,0,0,0,0,720,290,720
-        - 1280,0,1280,272,1209,229,1011,127,794,47,624,0
+        - 0.158,0.867,0.054,0.629,0,0.45,0.028,0.19,0.197,0.029,0.295,0.142,0.307,0,0,0,0,1,0.227,1
+        - 1,0,1,0.378,0.945,0.318,0.79,0.176,0.62,0.065,0.487,0
     zones:
-      driveway_near:
-        coordinates: 0.416,0.046,0.632,0.376,1,1,0.356,1,0.311,0.301,0.281,0.109
-        inertia: 3
-      driveway_far:
-        coordinates: 0.42,0.049,0.542,0.032,0.719,0.131,0.893,0.265,1,0.395,1,1,0.605,0.329
-        inertia: 3
       front_porch:
         coordinates: 0.352,1,0.218,1,0.082,0.704,0.11,0.408,0.311,0.31
         inertia: 3
@@ -275,6 +295,12 @@ cameras:
         inertia: 3
       doorbell_near:
         coordinates: 0.104,0.367,0.063,0.65,0.291,0.585,0.273,0.299
+        inertia: 3
+      frontyard_far:
+        coordinates: 0.42,0.049,0.52,0.032,0.658,0.099,0.815,0.209,1,0.398,1,1,0.605,0.329
+        inertia: 3
+      frontyard_near:
+        coordinates: 0.416,0.046,0.632,0.376,1,1,0.356,1,0.311,0.301,0.281,0.109
         inertia: 3
     ffmpeg:
       inputs:
@@ -290,17 +316,13 @@ cameras:
       filters:
         car:
           min_area: 8000
+        dog:
+          max_area: 39000
         motorcycle:
           min_area: 1000
         person:
           min_area: 8000
           max_area: 60000
-      track:
-        - person
-        - cat
-        - dog
-        - car
-        - motorcycle
       mask: 0.479,0.001,0.657,0.083,0.823,0.2,1,0.377,1,0
     mqtt:
       timestamp: false
@@ -313,17 +335,18 @@ cameras:
         required_zones:
           - doorbell_far
           - doorbell_near
-          - driveway_far
-          - driveway_near
           - front_porch
+          - frontyard_far
+          - frontyard_near
       alerts:
         required_zones:
           - doorbell_near
-          - driveway_near
+          - doorbell_far
+          - front_porch
+          - frontyard_near
   garage:
     motion:
-      mask:
-        - 802,50,640,40,638,0,806,0
+      mask: 0.661,0.091,0.465,0.067,0.474,0,0.653,0
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/garage
@@ -336,11 +359,14 @@ cameras:
             - detect
     objects:
       filters:
+        dog:
+          min_area: 700
+        car:
+          min_area: 21000
+          mask: 1,0.489,1,0,0.415,0
         person:
           min_area: 35000
           max_area: 320000
-          min_score: 0.75
-          threshold: 0.75
     mqtt:
       timestamp: false
       bounding_box: false
@@ -356,11 +382,11 @@ cameras:
         - driveway_near
         - driveway_far
     zones:
-      driveway_near:
-        coordinates: 0,1,0.82,1,0.786,0.728,0.888,0.364,0.884,0.169,0.799,0.092,0,0.718
+      frontyard_far:
+        coordinates: 0.52,0.106,0.702,0.058,0.797,0.092,0,0.715,0,0.46,0.18,0.297,0.371,0.17
         inertia: 3
-      driveway_far:
-        coordinates: 0.463,0.123,0.675,0.055,0.797,0.092,0,0.715,0,0.45,0.174,0.288,0.297,0.206
+      frontyard_near:
+        coordinates: 0,1,0.82,1,0.786,0.728,0.888,0.364,0.884,0.169,0.799,0.092,0,0.718
         inertia: 3
     ffmpeg:
       inputs:
@@ -375,7 +401,9 @@ cameras:
     objects:
       filters:
         car:
-          min_area: 10000
+          min_area: 15000
+          mask: 
+            0,0.435,0.193,0.262,0.388,0.144,0.615,0.06,0.752,0.039,0.813,0.132,1,0.367,1,0,0,0
         motorcycle:
           min_area: 1000
         person:
@@ -394,24 +422,25 @@ cameras:
       quality: 100
       height: 500
     review:
-      alerts:
-        required_zones:
-          - driveway_near
-          - driveway_far
       detections:
         required_zones:
-          - driveway_far
-          - driveway_near
+          - frontyard_far
+          - frontyard_near
+      alerts:
+        required_zones: frontyard_near
   grilldeck:
     motion:
       mask:
-        - 0.685,0,1,0,1,0.274,1,0.537,0.866,0.475,0.714,0.682,0.627,0.625,0.568,0.357,0.617,0.199
+        - 0.685,0,1,0,1,0.274,1,0.537,0.866,0.475,0.714,0.682,0.608,0.644,0.554,0.39,0.617,0.199
         - 0.279,0.586,0.235,0.173,0.482,0.135,0.516,0.306,0.476,0.505
     zones:
       grilldeck_far:
-        coordinates: 1045,412,1140,593,927,720,696,720,650,552
+        coordinates: 0.816,0.572,0.891,0.824,0.724,1,0.544,1,0.508,0.767
+        inertia: 3
       grilldeck_near:
-        coordinates: 734,465,1052,387,885,123,366,114,262,0,56,96,292,720,695,720,654,549
+        coordinates: 
+          0.573,0.646,0.822,0.537,0.691,0.171,0.286,0.158,0.205,0,0.044,0.133,0.228,1,0.543,1,0.511,0.762
+        inertia: 3
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/grilldeck
@@ -423,24 +452,42 @@ cameras:
           roles:
             - detect
     objects:
+      track:
+        - person
+        - face
+        - dog
+        - cat
       filters:
         cat:
+          min_area: 1250
           max_area: 45000
         dog:
+          min_area: 1250
           max_area: 55000
         person:
           min_area: 18000
           max_area: 180000
+      mask:
+        - 0.28,0.584,0.475,0.505,0.515,0.306,0.482,0.135,0.235,0.167
+        - 0.549,0.4,0.612,0.181,0.734,0.204,0.793,0.376,0.822,0.531,0.714,0.683,0.609,0.643
     mqtt:
       timestamp: false
       bounding_box: false
       crop: true
       quality: 100
       height: 500
+    review:
+      alerts:
+        required_zones: grilldeck_near
+      detections:
+        required_zones:
+          - grilldeck_near
+          - grilldeck_far
   mudroom:
     zones:
       mudroom_far:
-        coordinates: 1011,642,1118,409,1200,79,908,0,653,0,670,406
+        coordinates: 0.79,0.892,0.873,0.568,0.938,0.11,0.709,0,0.51,0,0.523,0.564
+        inertia: 3
       mudroom_near:
         coordinates: 964,720,398,720,171,129,626,0,656,417,1006,654
     ffmpeg:
@@ -454,6 +501,11 @@ cameras:
           roles:
             - detect
     objects:
+      track:
+        - person
+        - face
+        - dog
+        - cat
       filters:
         person:
           min_area: 35000
@@ -464,15 +516,16 @@ cameras:
       crop: true
       quality: 100
       height: 500
+    review: {}
   patio:
     motion:
-      mask: 0.227,0.036,0.283,0.194,0.298,0.82,0.477,0.735,0.455,0.637,0.389,0.176,0.399,0,0,0,0,0.296
+      mask: 0,0.322,0.093,0.184,0.237,0.081,0.362,0,0,0
     zones:
       patio_near:
         coordinates: 1,1,1,0.554,0.923,0.495,0,0.865,0,1
         inertia: 3
       patio_far:
-        coordinates: 0,0.35,0.858,0.153,0.952,0.301,0.911,0.497,0,0.861
+        coordinates: 0,0.35,0.924,0.14,0.968,0.222,0.915,0.494,0,0.861
         inertia: 3
     ffmpeg:
       inputs:
@@ -485,6 +538,11 @@ cameras:
           roles:
             - detect
     objects:
+      track:
+        - person
+        - face
+        - dog
+        - cat
       filters:
         cat: {}
         dog: {}
