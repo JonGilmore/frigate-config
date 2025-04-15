@@ -145,3 +145,8 @@ model_cache/**
 .timeline
 .jwt_secret
 .exports
+.version
+notifications.pem
+backup_config.yaml
+backup.db
+.search_stats.json

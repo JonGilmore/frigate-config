@@ -1,5 +1,4 @@
-# yaml-language-server: $schema=http://192.168.30.249:5005/api/config/schema.json
-version: 0.14
+version: 0.15-1
 detectors:
   coral1:
     type: edgetpu
@@ -8,18 +7,20 @@ detectors:
     type: edgetpu
     device: usb:1
 
+tls:
+  enabled: false
+
 logger:
-  logs:
-    frigate.record.maintainer: debug
+  default: info
 
 model:
-  path: plus://04127592da4363d9a2cc0e1a1ea80ac7
+  path: plus://2391bafdb4c3b75af1cc466a1d24dd2b
 
 database:
   path: /config/frigate.db
 
 mqtt:
-  host: 192.168.30.249
+  host: mosquitto
   topic_prefix: frigate
   user: frigate
   password: '{FRIGATE_MQTT_PASSWORD}'
@@ -27,12 +28,16 @@ mqtt:
 record:
   enabled: true
   retain:
+    days: 3
     mode: all
-  events:
-    pre_capture: 2
+  alerts:
     retain:
-      default: 40
-      mode: all
+      days: 80
+    pre_capture: 6
+  detections:
+    retain:
+      days: 80
+    pre_capture: 6
 
 timestamp_style:
   position: tr
@@ -40,43 +45,42 @@ timestamp_style:
 
 snapshots:
   enabled: true
-  clean_copy: true
   timestamp: false
   crop: true
   retain:
-    default: 20
+    default: 30
     objects:
       person: 30
 
 ffmpeg:
-  hwaccel_args: preset-nvidia-h264
   output_args:
     record: preset-record-generic-audio-aac
 
 detect:
-  fps: 5
-  width: 1280
-  height: 720
+  fps: 7
+  width: 1920
+  height: 1080
 
 objects:
   track:
     - person
     - face
-    - license_plate
     - dog
     - cat
-    - car
-    - amazon
-    - fedex
-    - ups
-    - package
+    - deer
+    - raccoon
+    - fox
+    - bear
+    - squirrel
+    - rabbit
 
 go2rtc:
   streams:
     doorbell:
-      - rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1920x1080
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.21:554/h264Preview_01_main
+      - ffmpeg:doorbell#audio=opus
     doorbell_sub:
-      - rtsp://ha:{FRIGATE_HA_AXIS}@192.168.30.130:554/axis-media/media.amp?videocodec=h264&resolution=1280x720
+      - ffmpeg:http://192.168.30.21/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
     workshop:
       - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.131:554/cam/realmonitor?channel=1&subtype=0
     workshop_sub:
@@ -109,41 +113,23 @@ go2rtc:
       - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=0
     patio_sub:
       - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.138:554/cam/realmonitor?channel=1&subtype=2
+    media:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.253:554/Streaming/Channels/101/
+      # - rtsp://thingino:thingino@192.168.31.165:554/ch0
+      # - ffmpeg:media#audio=opus
+    media_sub:
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.30.253:554/Streaming/Channels/102/
+      # - rtsp://thingino:thingino@192.168.31.165:554/ch1
   webrtc:
     candidates:
       - 192.168.30.249:8555
       - stun:8555
 
 cameras:
-  #  theta:
-  #    ffmpeg:
-  #      input_args: "-avoid_negative_ts make_zero -fflags +genpts+discardcorrupt -rtsp_transport tcp -use_wallclock_as_timestamps 1 -an"
-  #      inputs:
-  #        - path: rtsp://192.168.30.2:7447/{FRIGATE_UI}
-  #          roles:
-  #            - detect
-  #            - record
-  #    detect:
-  #      width: 1280
-  #      height: 1280
-  #      fps: 15
-  #    mqtt:
-  #      timestamp: False
-  #      bounding_box: False
-  #      crop: True
-  #      quality: 100
-  #      height: 500
   doorbell:
-    motion:
-      mask: 1,0,1,1,0.743,1,0.793,0.793,0.811,0.628,0.544,0.58,0.485,0
-    zones:
-      doorbell_near:
-        coordinates: 0.73,1,0.785,0.792,0.545,0.7,0.502,0.626,0.384,0.643,0.313,0.786,0.289,1
-        inertia: 3
-      doorbell_far:
-        coordinates: 0.544,0.696,0.658,0.747,0.79,0.79,0.809,0.637,0.542,0.585
-        inertia: 3
     ffmpeg:
+      output_args:
+        record: preset-record-generic-audio-copy
       inputs:
         - path: rtsp://192.168.30.249:8554/doorbell
           input_args: preset-rtsp-restream
@@ -153,36 +139,27 @@ cameras:
           input_args: preset-rtsp-restream
           roles:
             - detect
+    zones:
+      doorbell_far:
+        coordinates: 1,0.909,0.499,0.699,0.712,0.644,1,0.712
+        inertia: 1
+        loitering_time: 0
+      doorbell_near:
+        coordinates: 0.99,0.917,0.932,1,0.255,1,0.242,0.652,0.395,0.664
+        inertia: 1
+        loitering_time: 0
     objects:
-      track:
-        - person
-        - face
-        - dog
-        - cat
-        - package
-      filters:
-        cat: {}
-        dog: {}
-        person:
-          min_area: 10000
-          max_area: 320000
-      mask: 0.305,1,0.248,0.535,0.292,0.142,0.54,0.141,0.541,0.003,0,0,0,1
-    mqtt:
-      timestamp: false
-      bounding_box: false
-      crop: true
-      quality: 100
-      height: 500
+      mask: 0.549,0.613,1,0.67,1,0,0.536,0
     review:
-      detections:
-        required_zones:
-          - doorbell_far
-          - doorbell_near
       alerts:
         required_zones: doorbell_near
+      detections:
+        required_zones:
+          - doorbell_near
+          - doorbell_far
   workshop:
     motion:
-      mask: 1,0,1,1,0.455,1,0.563,0.607,0.723,0.439,0.85,0.5,0.868,0.26,0.42,0
+      mask: 0.843,0.129,0.822,0.238,0.879,0.285,0.919,0.187
     zones:
       workshop_far:
         coordinates: 
@@ -204,11 +181,6 @@ cameras:
           roles:
             - detect
     objects:
-      track:
-        - person
-        - face
-        - dog
-        - cat
       filters:
         cat:
           min_area: 5000
@@ -221,7 +193,6 @@ cameras:
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
     review:
@@ -233,8 +204,7 @@ cameras:
         required_zones: workshop_near
   deck:
     motion:
-      mask: 
-        0.098,0.489,0,0.46,0,0,1,0,1,0.407,0.893,0.342,0.833,0.431,0.649,0.329,0.432,0.421
+      mask: 0.217,0.607,0,0.46,0,0,1,0,1,0.407,0.893,0.342,0.826,0.451,0.649,0.329
     zones:
       deck_far:
         coordinates: 
@@ -256,22 +226,14 @@ cameras:
     objects:
       track:
         - person
-        - face
-        - dog
-        - cat
       filters:
-        cat:
-          min_area: 9000
-        dog:
-          min_area: 9000
         person:
           min_area: 16000
           max_area: 130000
-          mask: 0.47,0.773,0.558,0.763,0.534,0.453,0.46,0.469
+          mask: 0.426,0.768,0.514,0.758,0.49,0.448,0.416,0.464
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
     review:
@@ -282,26 +244,10 @@ cameras:
       alerts:
         required_zones: deck_near
   frontyard:
-    motion:
-      mask:
-        - 0.158,0.867,0.054,0.629,0,0.45,0.028,0.19,0.197,0.029,0.295,0.142,0.307,0,0,0,0,1,0.227,1
-        - 1,0,1,0.378,0.945,0.318,0.79,0.176,0.62,0.065,0.487,0
-    zones:
-      front_porch:
-        coordinates: 0.352,1,0.218,1,0.082,0.704,0.11,0.408,0.311,0.31
-        inertia: 3
-      doorbell_far:
-        coordinates: 0.295,0.59,0.554,0.5,0.454,0.233,0.274,0.291
-        inertia: 3
-      doorbell_near:
-        coordinates: 0.104,0.367,0.063,0.65,0.291,0.585,0.273,0.299
-        inertia: 3
-      frontyard_far:
-        coordinates: 0.42,0.049,0.52,0.032,0.658,0.099,0.815,0.209,1,0.398,1,1,0.605,0.329
-        inertia: 3
-      frontyard_near:
-        coordinates: 0.416,0.046,0.632,0.376,1,1,0.356,1,0.311,0.301,0.281,0.109
-        inertia: 3
+    detect:
+      fps: 7
+      width: 1280
+      height: 720
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/frontyard
@@ -312,38 +258,28 @@ cameras:
           input_args: preset-rtsp-restream
           roles:
             - detect
-    objects:
-      filters:
-        car:
-          min_area: 8000
-        dog:
-          max_area: 39000
-        motorcycle:
-          min_area: 1000
-        person:
-          min_area: 8000
-          max_area: 60000
-      mask: 0.479,0.001,0.657,0.083,0.823,0.2,1,0.377,1,0
+    onvif:
+      host: 192.168.31.133
+      port: 80
+      user: admin
+      password: '{FRIGATE_RTSP_PASSWORD}'
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
+    zones:
+      frontyard_home:
+        coordinates: 0,0.188,0.195,0.199,0.413,0.176,0.646,0.296,1,0.492,1,1,0,1
+        inertia: 3
+    motion: {}
     review:
-      detections:
-        required_zones:
-          - doorbell_far
-          - doorbell_near
-          - front_porch
-          - frontyard_far
-          - frontyard_near
       alerts:
-        required_zones:
-          - doorbell_near
-          - doorbell_far
-          - front_porch
-          - frontyard_near
+        required_zones: frontyard_home
+      detections:
+        required_zones: frontyard_home
+    objects:
+      mask: 1,0.491,0.648,0.294,0.415,0.171,0.189,0.199,0,0.184,0,0,1,0
   garage:
     motion:
       mask: 0.661,0.091,0.465,0.067,0.474,0,0.653,0
@@ -370,24 +306,36 @@ cameras:
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
   driveway:
-    motion:
-      mask:
-        - 1280,411,1280,0,0,0,0,315,251,189,505,105,781,45,971,33,1127,121,1080,369
-    snapshots:
-      required_zones:
-        - driveway_near
-        - driveway_far
+    # motion: {}
+    # snapshots:
+    #   enabled: true
+    #   timestamp: false
+    #   crop: true
+    #   retain:
+    #     default: 30
+    #     objects:
+    #       person: 30
+    #   required_zones:
+    #     - trash
+    #     - driveway_near
+    #     - driveway_far
     zones:
       frontyard_far:
         coordinates: 0.52,0.106,0.702,0.058,0.797,0.092,0,0.715,0,0.46,0.18,0.297,0.371,0.17
-        inertia: 3
+        inertia: 1
       frontyard_near:
-        coordinates: 0,1,0.82,1,0.786,0.728,0.888,0.364,0.884,0.169,0.799,0.092,0,0.718
-        inertia: 3
+        coordinates: 0,1,0.817,1,0.872,0.871,0.786,0.728,0.881,0.4,0.913,0.219,0.808,0.097,0,0.736
+        inertia: 1
+        loitering_time: 0
+      # trash:
+      #   coordinates: 
+      #     0.004,0.294,0.271,0.093,0.273,0.09,0.338,0.244,0.337,0.245,0.051,0.475,0.051,0.474
+      #   loitering_time: 0
+      #   objects: waste_bin
+      #   inertia: 3
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/driveway
@@ -403,7 +351,7 @@ cameras:
         car:
           min_area: 15000
           mask: 
-            0,0.435,0.193,0.262,0.388,0.144,0.615,0.06,0.752,0.039,0.813,0.132,1,0.367,1,0,0,0
+            0,0.446,0.161,0.302,0.366,0.166,0.519,0.098,0.724,0.048,0.814,0.11,1,0.367,1,0,0,0
         motorcycle:
           min_area: 1000
         person:
@@ -411,28 +359,41 @@ cameras:
           max_area: 105000
       track:
         - person
-        - cat
+        - face
+        - license_plate
         - dog
+        - cat
+        - deer
+        - raccoon
+        - fox
+        - bear
+        - squirrel
+        - rabbit
         - car
-        - motorcycle
+        - amazon
+        - usps
+        - ups
+        - fedex
+        - dhl
+        - package
+        - waste_bin
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
     review:
+      alerts:
+        required_zones: frontyard_near
       detections:
         required_zones:
           - frontyard_far
           - frontyard_near
-      alerts:
-        required_zones: frontyard_near
   grilldeck:
     motion:
       mask:
-        - 0.685,0,1,0,1,0.274,1,0.537,0.866,0.475,0.714,0.682,0.608,0.644,0.554,0.39,0.617,0.199
-        - 0.279,0.586,0.235,0.173,0.482,0.135,0.516,0.306,0.476,0.505
+        - 0.279,0.591,0.545,0.503,0.549,0.131,0.24,0.156
+        - 0.554,0.758,0.756,0.682,0.843,0.537,0.705,0.152,0.56,0.136
     zones:
       grilldeck_far:
         coordinates: 0.816,0.572,0.891,0.824,0.724,1,0.544,1,0.508,0.767
@@ -454,9 +415,6 @@ cameras:
     objects:
       track:
         - person
-        - face
-        - dog
-        - cat
       filters:
         cat:
           min_area: 1250
@@ -467,13 +425,9 @@ cameras:
         person:
           min_area: 18000
           max_area: 180000
-      mask:
-        - 0.28,0.584,0.475,0.505,0.515,0.306,0.482,0.135,0.235,0.167
-        - 0.549,0.4,0.612,0.181,0.734,0.204,0.793,0.376,0.822,0.531,0.714,0.683,0.609,0.643
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
     review:
@@ -487,9 +441,11 @@ cameras:
     zones:
       mudroom_far:
         coordinates: 0.79,0.892,0.873,0.568,0.938,0.11,0.709,0,0.51,0,0.523,0.564
-        inertia: 3
+        inertia: 1
       mudroom_near:
-        coordinates: 964,720,398,720,171,129,626,0,656,417,1006,654
+        coordinates: 0.724,1,0.307,1,0.126,0.172,0.499,0,0.513,0.573,0.783,0.899
+        inertia: 1
+        loitering_time: 0
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/mudroom
@@ -501,32 +457,31 @@ cameras:
           roles:
             - detect
     objects:
-      track:
-        - person
-        - face
-        - dog
-        - cat
       filters:
         person:
-          min_area: 35000
-          max_area: 180000
+          min_area: 25000
+          max_area: 190000
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
-    review: {}
+    review:
+      alerts:
+        required_zones:
+          - mudroom_near
+          - mudroom_far
+      detections:
+        required_zones:
+          - mudroom_near
+          - mudroom_far
+    genai:
+      enabled: false
   patio:
-    motion:
-      mask: 0,0.322,0.093,0.184,0.237,0.081,0.362,0,0,0
-    zones:
-      patio_near:
-        coordinates: 1,1,1,0.554,0.923,0.495,0,0.865,0,1
-        inertia: 3
-      patio_far:
-        coordinates: 0,0.35,0.924,0.14,0.968,0.222,0.915,0.494,0,0.861
-        inertia: 3
+    detect:
+      fps: 7
+      width: 1280
+      height: 720
     ffmpeg:
       inputs:
         - path: rtsp://192.168.30.249:8554/patio
@@ -537,30 +492,76 @@ cameras:
           input_args: preset-rtsp-restream
           roles:
             - detect
+    zones:
+      patio_near:
+        coordinates: 1,1,1,0.554,0.923,0.495,0,0.865,0,1
+        inertia: 3
+      patio_all:
+        coordinates: 0,0.212,1,0.236,1,1,0,1
     objects:
       track:
         - person
         - face
-        - dog
-        - cat
+        - deer
+        - raccoon
+        - fox
+        - bear
+        - squirrel
+        - rabbit
       filters:
-        cat: {}
-        dog: {}
-        person:
-          min_area: 4000
-          max_area: 142000
-          min_score: 0.76
-          threshold: 0.76
+        person: {}
+    onvif:
+      host: 192.168.31.138
+      port: 80
+      user: admin
+      password: '{FRIGATE_RTSP_PASSWORD}'
+      autotracking:
+        enabled: true
+        calibrate_on_startup: false
+        zooming: absolute
+        required_zones:
+          - patio_all
+        movement_weights: 0.25, 1.0, 2.999664306640625, 4.205652508171655, 0.689589078195635
     mqtt:
       timestamp: false
       bounding_box: false
-      crop: true
       quality: 100
       height: 500
     review:
       alerts:
         required_zones: patio_near
-      detections:
-        required_zones:
-          - patio_near
-          - patio_far
+    motion:
+      mask: 0.215,0.925,0.107,0,0.267,0,0.361,0.862
+  media:
+    ffmpeg:
+      inputs:
+        - path: rtsp://192.168.30.249:8554/media
+          roles:
+            - record
+        - path: rtsp://192.168.30.249:8554/media_sub
+          roles:
+            - detect
+    objects:
+      track:
+        - person
+        - face
+    mqtt:
+      timestamp: false
+      bounding_box: false
+      quality: 100
+      height: 500
+notifications:
+  enabled: false
+  email: jon@gilmore.cloud
+semantic_search:
+  enabled: true
+  reindex: false
+  model_size: large
+camera_groups:
+  front:
+    order: 1
+    icon: LuWarehouse
+    cameras:
+      - driveway
+      - doorbell
+      - frontyard
