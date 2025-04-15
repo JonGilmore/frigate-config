@@ -20,7 +20,7 @@ sources:
       After every setting adjustment, have someone walk around outside and see if you can freeze-frame to get a clean image. If not, keep changing until you do. Clean motion pictures are what we are after, not a clean static image.
   - name: Frigate camera setup
     site: github.com
-    url: https://deploy-preview-6262--frigate-docs.netlify.app/frigate/camera_setup/#example-camera-configuration
+    url: https://docs.frigate.video/frigate/camera_setup/#example-camera-configuration
     data: |
       For the Dahua/Loryta 5442 camera, I use the following settings:
 
