@@ -2,10 +2,10 @@ version: 0.17-0
 detectors:
   ov_0:
     type: openvino
-    device: GPU
+    device: NPU
   ov_1:
     type: openvino
-    device: GPU
+    device: NPU
 
 tls:
   enabled: false
@@ -198,12 +198,28 @@ go2rtc:
       - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.140:554/Streaming/Channels/101/
     media_sub:
       - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.31.140:554/Streaming/Channels/102/
+    baby:
+      - rtsp://192.168.31.75:8554/vtech_baby
   webrtc:
     candidates:
       - 192.168.30.249:8555
       - stun:8555
 
 cameras:
+  baby:
+    lpr:
+      enabled: false
+    detect:
+      enabled: false
+    snapshots:
+      enabled: false
+    record:
+      enabled: false
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/baby
+          input_args: preset-rtsp-restream
+          roles: []
   doorbell:
     lpr:
       enabled: false
